@@ -2,7 +2,7 @@ import os
 from io import BytesIO
 from datetime import datetime
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -28,6 +28,11 @@ app = Flask(__name__)
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"}), 200
+
+
+@app.route("/", methods=["GET"])
+def estimate_page():
+    return render_template("estimate.html")
 
 
 @app.route("/submit-estimate", methods=["POST"])
