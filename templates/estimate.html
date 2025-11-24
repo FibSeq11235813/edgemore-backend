@@ -5,19 +5,512 @@
   <title>Edgemore Epoxy and Painting - Estimate Request</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ... all the CSS from the backend-ready version ... */
+    :root {
+      --bg: #050505;
+      --card: #111111;
+      --accent: #d4af37;
+      --accent-soft: #7a651f;
+      --text: #f5f5f5;
+      --muted: #b3b3b3;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.7);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1a1a1a 0, #000 45%, #000 100%);
+      color: var(--text);
+    }
+    .page-frame {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .card {
+      background: linear-gradient(145deg, #090909, #111111);
+      border-radius: 22px;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      box-shadow: var(--shadow-lg);
+      max-width: 960px;
+      width: 100%;
+      padding: 28px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) {
+      .card {
+        padding: 32px 32px 28px;
+      }
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.18), transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.08), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+    .header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+      padding-bottom: 16px;
+    }
+    .brand-line {
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .title {
+      font-size: 22px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .contact-pill {
+      font-size: 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.65);
+      white-space: nowrap;
+    }
+    .contact-pill span.icon {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 10px;
+      color: var(--accent);
+    }
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 880px) {
+      .content-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 24px;
+      }
+    }
+    .intro {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 6px 14px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .bullets li::before {
+      content: "•";
+      color: var(--accent);
+      margin-right: 6px;
+    }
+    .form-panel {
+      background: radial-gradient(circle at top, #191919 0, #050505 55%);
+      border-radius: 18px;
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      padding: 16px 14px 14px;
+    }
+    @media (min-width: 880px) {
+      .form-panel {
+        padding: 18px 18px 16px;
+      }
+    }
+    .form-heading {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    .form-subheading {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    form {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 720px) {
+      form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 12px;
+      }
+      .field--full {
+        grid-column: 1 / -1;
+      }
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    input, select, textarea {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(0, 0, 0, 0.75);
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+    textarea {
+      border-radius: 12px;
+      resize: vertical;
+      min-height: 72px;
+      font-family: inherit;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #666;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35);
+      background: rgba(5, 5, 5, 0.95);
+    }
+    .helper {
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 6px;
+    }
+    .submit-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 10px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      background: linear-gradient(135deg, #d4af37, #f7e28f);
+      color: #000;
+      cursor: pointer;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .submit-btn span.icon {
+      font-size: 13px;
+    }
+    .fine-print {
+      font-size: 9px;
+      color: var(--muted);
+      max-width: 260px;
+    }
+    .footer {
+      margin-top: 18px;
+      border-top: 1px solid rgba(212, 175, 55, 0.35);
+      padding-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .footer strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .success-banner {
+      display: none;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      color: #bbf7d0;
+      font-size: 11px;
+    }
+    .success-banner.visible {
+      display: block;
+    }
+    .error-banner {
+      display: none;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fecaca;
+      font-size: 11px;
+    }
+    .error-banner.visible {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <!-- ... all the same body content ... -->
+  <div class="page-frame">
+    <div class="card">
+      <div class="card-inner">
+        <header class="header">
+          <div class="brand-line">EDGEMORE EPOXY AND PAINTING</div>
+          <div class="title-row">
+            <div>
+              <div class="title">Estimate Request</div>
+              <div class="subtitle">Luxury Epoxy &amp; Fine Finishes • Tampa Bay</div>
+            </div>
+            <div class="contact-pill">
+              <span class="icon">📞</span>
+              <span>727-421-4564</span>
+            </div>
+          </div>
+        </header>
 
-  <!-- IMPORTANT: keep this form tag exactly like this for same-service hosting -->
-  <form id="estimate-form" action="/submit-estimate" method="post">
-    <!-- all the inputs / selects / textareas exactly as before -->
-  </form>
+        <main class="content-grid">
+          <section>
+            <p class="intro">
+              Tell us a bit about your space and vision. We’ll review your details, then follow up with a tailored estimate and finish recommendations.
+            </p>
+            <ul class="bullets">
+              <li>Leggari-certified metallic &amp; flake epoxy systems</li>
+              <li>Luxury garage, driveway, patio &amp; countertop finishes</li>
+              <li>Engineered for durability, UV resistance &amp; impact</li>
+              <li>Serving Palm Harbor, Clearwater, Tarpon Springs &amp; more</li>
+            </ul>
+          </section>
+
+          <aside class="form-panel">
+            <div class="form-heading">Start Your Estimate</div>
+            <div class="form-subheading">Fields marked * help us give you accurate pricing.</div>
+
+            <!-- 
+              If this HTML is hosted on the same domain as your Flask app on Render,
+              you can leave action="/submit-estimate".
+              If it's on a different domain / static host, replace with your full Render URL:
+              action="https://YOUR-RENDER-SERVICE.onrender.com/submit-estimate"
+            -->
+            <form id="estimate-form" action="/submit-estimate" method="post">
+              <!-- CLIENT INFO -->
+              <div class="field">
+                <label for="name">Full Name *</label>
+                <input id="name" name="name" type="text" placeholder="First and last name" required>
+              </div>
+
+              <div class="field">
+                <label for="phone">Phone *</label>
+                <input id="phone" name="phone" type="tel" placeholder="Best number to reach you" required>
+              </div>
+
+              <div class="field">
+                <label for="email">Email *</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+              </div>
+
+              <div class="field">
+                <label for="contact-method">Preferred Contact</label>
+                <select id="contact-method" name="contact_method">
+                  <option value="">Select one</option>
+                  <option value="call">Call</option>
+                  <option value="text">Text</option>
+                  <option value="email">Email</option>
+                </select>
+              </div>
+
+              <div class="field field--full">
+                <label for="address">Service Address *</label>
+                <input id="address" name="address" type="text" placeholder="Street address" required>
+              </div>
+
+              <div class="field">
+                <label for="city">City</label>
+                <input id="city" name="city" type="text" placeholder="City">
+              </div>
+
+              <div class="field">
+                <label for="zip">ZIP Code</label>
+                <input id="zip" name="zip" type="text" placeholder="ZIP">
+              </div>
+
+              <!-- PROJECT DETAILS -->
+              <div class="field field--full">
+                <label for="space-type">Type of Space *</label>
+                <select id="space-type" name="space_type" required>
+                  <option value="">Select one</option>
+                  <option value="garage">Garage</option>
+                  <option value="driveway">Driveway</option>
+                  <option value="patio">Patio / Pool Deck</option>
+                  <option value="countertop">Countertops</option>
+                  <option value="interior-floor">Interior Floor</option>
+                  <option value="commercial">Commercial Space</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="sqft">Approx. Square Footage</label>
+                <input id="sqft" name="square_footage" type="number" min="0" placeholder="If known">
+              </div>
+
+              <div class="field">
+                <label for="finish">Desired Finish</label>
+                <select id="finish" name="finish">
+                  <option value="">Select one</option>
+                  <option value="metallic">Metallic Epoxy</option>
+                  <option value="flake">Flake System</option>
+                  <option value="solid">Solid Color</option>
+                  <option value="polished">Polished / High-Gloss</option>
+                  <option value="not-sure">Not sure yet</option>
+                </select>
+              </div>
+
+              <div class="field field--full">
+                <label for="condition">Current Surface Condition</label>
+                <textarea id="condition" name="condition" placeholder="Cracks, oil stains, previous coatings, etc."></textarea>
+              </div>
+
+              <div class="field field--full">
+                <label for="vision">Project Description / Vision *</label>
+                <textarea id="vision" name="vision" required placeholder="Tell us how you’d like the space to look and feel."></textarea>
+              </div>
+
+              <div class="field">
+                <label for="timeline">Timeline</label>
+                <select id="timeline" name="timeline">
+                  <option value="">How soon?</option>
+                  <option value="asap">As soon as possible</option>
+                  <option value="30">Within 30 days</option>
+                  <option value="60">Within 60 days</option>
+                  <option value="90+">90 days or more</option>
+                  <option value="just-looking">Just exploring options</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="budget">Budget Range (optional)</label>
+                <input id="budget" name="budget" type="text" placeholder="$3,000 – $8,000, etc.">
+              </div>
+
+              <div class="field field--full">
+                <label for="referral">How did you hear about Edgemore?</label>
+                <input id="referral" name="referral" type="text" placeholder="Facebook, Instagram, referral, neighborhood, etc.">
+              </div>
+
+              <div class="actions field--full">
+                <button class="submit-btn" type="submit">
+                  <span class="icon">➜</span>
+                  <span>Submit Estimate Request</span>
+                </button>
+                <div class="fine-print">
+                  By submitting, you’re simply requesting an estimate. We’ll review your details and follow up with next steps.
+                </div>
+              </div>
+
+              <div id="success-banner" class="success-banner">
+                Thank you! Your estimate request was submitted successfully. We’ll be in touch soon.
+              </div>
+              <div id="error-banner" class="error-banner">
+                Something went wrong submitting your request. Please try again or call 727-421-4564.
+              </div>
+            </form>
+          </aside>
+        </main>
+
+        <footer class="footer">
+          <div>
+            <strong>Edgemore Epoxy and Painting</strong><br>
+            Leggari-Certified Installer • Luxury Epoxy &amp; Fine Finishes
+          </div>
+          <div>
+            Serving Tampa Bay • Garages • Driveways • Patios • Countertops • Commercial Floors
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
 
   <script>
-    // ... the JS fetch() handler from the backend-ready version ...
+    // AJAX submission so we stay on the page and show success/error banners.
+    const form = document.getElementById('estimate-form');
+    const successBanner = document.getElementById('success-banner');
+    const errorBanner = document.getElementById('error-banner');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      successBanner.classList.remove('visible');
+      errorBanner.classList.remove('visible');
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.status === 'ok') {
+          successBanner.classList.add('visible');
+          form.reset();
+        } else {
+          errorBanner.classList.add('visible');
+        }
+      } catch (err) {
+        errorBanner.classList.add('visible');
+      }
+    });
   </script>
 </body>
 </html>
